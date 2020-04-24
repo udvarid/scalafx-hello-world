@@ -1,11 +1,11 @@
 // Name of the project
-name := "ScalaFX Hello World"
+name := "Game of life"
 
 // Project version
 version := "12.0.2-R18"
 
 // Version of Scala used by the project
-scalaVersion := "2.13.1"
+scalaVersion := "2.12.6"
 
 // Add dependency on ScalaFX library
 libraryDependencies += "org.scalafx" %% "scalafx" % "12.0.2-R18"
