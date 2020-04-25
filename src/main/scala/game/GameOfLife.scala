@@ -24,12 +24,19 @@ class GameOfLife(initCells: Int, canvas: Canvas, size: Int) {
     fillCells(Set[Cell]())
   }
 
+  val giveColor: Boolean => Color = a => if (a) Color.Green else Color.White
+
+  val giveFold: PartialFunction[Boolean, Int] = {
+    case true => 10
+    case false => 11
+  }
+
   private def drawCells(cellsToDraw: Set[Cell]): Unit = {
     val gc = canvas.graphicsContext2D
     cellsToDraw.filter(c => c.newBorn || !c.live)
       .foreach(c => {
-        gc.fill = if (c.live) Color.Green else Color.White
-        val fold = if (c.live) 10 else 11
+        gc.fill = giveColor(c.live)
+        val fold = giveFold(c.live)
         gc.fillOval(c.x * 25 + 7, c.y * 25 + 7, fold, fold)
         if (c.newBorn) c.newBorn = false
       })
@@ -54,7 +61,7 @@ class GameOfLife(initCells: Int, canvas: Canvas, size: Int) {
 
     @tailrec
     def selectNewBurns(newBurnCells: Set[Cell], livingCells: Set[Cell]): Set[Cell] = {
-      if (newBurnCells.isEmpty) return livingCells
+      if (newBurnCells.isEmpty) livingCells
       else {
         if (livingCells.count(c2 => c2 ~ newBurnCells.head).canBorn)
           selectNewBurns(newBurnCells.toList.tail.toSet, livingCells + newBurnCells.head)
@@ -72,7 +79,7 @@ class GameOfLife(initCells: Int, canvas: Canvas, size: Int) {
 
     @tailrec
     def nextRound(workingCells: Set[Cell]): Unit = {
-      Thread.sleep(500)
+      Thread.sleep(250)
       if (workingCells.isEmpty) return
       else {
         passAways(workingCells)
